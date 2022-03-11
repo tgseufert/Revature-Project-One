@@ -21,7 +21,6 @@ public class Recipe implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     //@JoinColumn(name="recipe_id")
-
     private int id;
 
     @Column(name="name")

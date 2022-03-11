@@ -25,35 +25,41 @@ public class CreateRecipe extends HttpServlet {
         RecipeDAO recipeDAO=new RecipeDAO();
         IngredientDAO ingredientDAO=new IngredientDAO();
         RecipeIngredientDAO recipeIngredientDAO=new RecipeIngredientDAO();
-        String[] ingName=new String[3];
-        String[] quantity=new String[3];
+       //String[] ingName=new String[3];
+        //String[] quantity=new String[3];
+
         String status="";
 
         PrintWriter out = response.getWriter();
         String name =request.getParameter("recipe name");
-        ingName[0]=request.getParameter("ingredient0");
-        ingName[1] =request.getParameter("ingredient1");
-        ingName[2] =request.getParameter("ingredient2");
-        quantity[0]= request.getParameter("quantity0");
-        quantity[1]= request.getParameter("quantity1");
-        quantity[2]= request.getParameter("quantity2");
+        String ingName0=request.getParameter("ingredient0");
+        String ingName1 =request.getParameter("ingredient1");
+        String  ingName2 =request.getParameter("ingredient2");
+        String quantity0= request.getParameter("quantity0");
+        String quantity1= request.getParameter("quantity1");
+        String quantity2= request.getParameter("quantity2");
         String instructions =request.getParameter("add recipe");
 
         request.setAttribute("name",name);
-        request.setAttribute("ingredients",ingName);
+       // request.setAttribute("ingredients",ingName);
 
         Recipe inputRecipe = new Recipe();
         inputRecipe.setName(name);
         inputRecipe.setInstructions(instructions);
 
+        Ingredient ingredient0 = new Ingredient(ingName0);
+        Ingredient ingredient1 = new Ingredient(ingName1);
+        Ingredient ingredient2 = new Ingredient(ingName2);
 
-
-              Ingredient[] ingredients=new Ingredient[3];
-        for (int i=0;i<3;i++){
-            ingredients[i]=new Ingredient(ingName[i]);
-                ingredientDAO.addIngredient(ingredients[i]);
-            System.out.println(ingredients[i]);
-        }
+        ingredientDAO.addIngredient(ingredient0);
+        ingredientDAO.addIngredient(ingredient1);
+        ingredientDAO.addIngredient(ingredient2);
+//              Ingredient[] ingredients=new Ingredient[3];
+//        for (int i=0;i<3;i++){
+//            ingredients[i]=new Ingredient(ingName[i]);
+//                ingredientDAO.addIngredient(ingredients[i]);
+//            System.out.println(ingredients[i]);
+//        }
 
 
 
@@ -69,9 +75,9 @@ public class CreateRecipe extends HttpServlet {
         }else{
             recipeDAO.addRecipe(inputRecipe);
             status="added";
-            recipeIngredientDAO.addLink(inputRecipe,ingredients[0],quantity[0]);
-            recipeIngredientDAO.addLink(inputRecipe,ingredients[1],quantity[1]);
-            recipeIngredientDAO.addLink(inputRecipe,ingredients[2],quantity[2]);
+            recipeIngredientDAO.addLink(inputRecipe,ingredient0,quantity0);
+            recipeIngredientDAO.addLink(inputRecipe,ingredient1,quantity1);
+            recipeIngredientDAO.addLink(inputRecipe,ingredient2,quantity2);
 
 
         }
@@ -81,11 +87,13 @@ public class CreateRecipe extends HttpServlet {
 
 
         //debug code, useful for if create.jsp fails to load
-        String ingQuaList=null;
+       /*
+       String ingQuaList=null;
         for (int i=0;i<3;i++){
             ingQuaList = ingQuaList+ ingName[i]+" "+quantity[i]+" ";
         }
         out.println(name+"\n"+ingQuaList+"\n"+instructions);
+        */
 
         //requests the create.jsp page if it can
       if (name==null){

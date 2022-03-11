@@ -16,7 +16,7 @@ public class IngredientDAO {
     public void addIngredient(Ingredient ingredient){
         try {
             Session session=HibernateUtil.getSession();
-            if (getIngredientByName(ingredient.getName())==null){
+            if (getIngredientByID(ingredient.getId())==null){
                 Transaction transaction=session.beginTransaction();
                 session.persist(ingredient);
                 transaction.commit();

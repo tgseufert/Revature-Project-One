@@ -10,6 +10,8 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeIngredientDAO {
 
@@ -47,4 +49,15 @@ public class RecipeIngredientDAO {
     }
 
 
+    public List<RecipeIngredient> getIngList(Recipe recipe) throws IOException {
+
+        Session session = HibernateUtil.getSession();
+
+        List<RecipeIngredient> recipeIngredientList;
+        Query query =session.createQuery("FROM RecipeIngredient WHERE recipe=:id", RecipeIngredient.class);
+        query.setParameter("id",recipe);
+        recipeIngredientList=query.list();
+        return recipeIngredientList;
+
+    }
 }
