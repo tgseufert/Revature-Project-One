@@ -2,6 +2,7 @@ package frontend;
 
 import backend.dao.IngredientDAO;
 import backend.dao.RecipeDAO;
+import backend.dao.RecipeIngredientDAO;
 import backend.model.Ingredient;
 import backend.model.Recipe;
 
@@ -23,13 +24,14 @@ public class CreateRecipe extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         RecipeDAO recipeDAO=new RecipeDAO();
         IngredientDAO ingredientDAO=new IngredientDAO();
+        RecipeIngredientDAO recipeIngredientDAO=new RecipeIngredientDAO();
         String[] ingName=new String[3];
         String[] quantity=new String[3];
         String status="";
 
         PrintWriter out = response.getWriter();
         String name =request.getParameter("recipe name");
-        ingName[1]=request.getParameter("ingredient0");
+        ingName[0]=request.getParameter("ingredient0");
         ingName[1] =request.getParameter("ingredient1");
         ingName[2] =request.getParameter("ingredient2");
         quantity[0]= request.getParameter("quantity0");
@@ -40,36 +42,39 @@ public class CreateRecipe extends HttpServlet {
         request.setAttribute("name",name);
         request.setAttribute("ingredients",ingName);
 
-        Set<Ingredient> ingredientSet=new HashSet<Ingredient>();
-        for (int i=0;i<3;i++) {
-            ingredientSet.add(new Ingredient(ingName[i],quantity[i]));
+        Recipe inputRecipe = new Recipe();
+        inputRecipe.setName(name);
+        inputRecipe.setInstructions(instructions);
 
+
+
+              Ingredient[] ingredients=new Ingredient[3];
+        for (int i=0;i<3;i++){
+            ingredients[i]=new Ingredient(ingName[i]);
+                ingredientDAO.addIngredient(ingredients[i]);
+            System.out.println(ingredients[i]);
         }
+
 
 
         //check if the recipe exists, and update or adds it as applicable
         if(recipeDAO.recipeExists(name)){
             recipeDAO.updateRecipe(name,instructions);
             status="updated";
+//            recipeIngredientDAO.deleteLink(inputRecipe);
+//            recipeIngredientDAO.addLink(inputRecipe,ingredients[0],quantity[0]);
+//            recipeIngredientDAO.addLink(inputRecipe,ingredients[1],quantity[1]);
+//            recipeIngredientDAO.addLink(inputRecipe,ingredients[2],quantity[2]);
 
         }else{
-        Recipe inputRecipe = new Recipe();
-        inputRecipe.setName(name);
-        inputRecipe.setInstructions(instructions);
+            recipeDAO.addRecipe(inputRecipe);
+            status="added";
+            recipeIngredientDAO.addLink(inputRecipe,ingredients[0],quantity[0]);
+            recipeIngredientDAO.addLink(inputRecipe,ingredients[1],quantity[1]);
+            recipeIngredientDAO.addLink(inputRecipe,ingredients[2],quantity[2]);
 
 
-        recipeDAO.addRecipe(inputRecipe);
-        status="added";
-               }
-        //adds unique ingredient/quantity pairs to the DB
-//        for (int i=0;i<3;i++) {
-//            if(ingredientDAO.getIngredientByName(ingName[i])==null|| ingredientDAO.getIngredientByName(ingName[i]).getQuantity() != quantity[i]){
-//                ingredientDAO.addIngredient(new Ingredient(ingName[i],quantity[i]));
-//            }
-//
-//        }
-
-
+        }
 
         //status for create.jsp page to use
         request.setAttribute("status",status);

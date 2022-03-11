@@ -1,5 +1,6 @@
 package backend.dao;
 import backend.model.Ingredient;
+import backend.model.Recipe;
 import backend.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -15,7 +16,7 @@ public class IngredientDAO {
     public void addIngredient(Ingredient ingredient){
         try {
             Session session=HibernateUtil.getSession();
-            if (getIngredientByID(ingredient.getId())==null){
+            if (getIngredientByName(ingredient.getName())==null){
                 Transaction transaction=session.beginTransaction();
                 session.persist(ingredient);
                 transaction.commit();
@@ -56,5 +57,23 @@ public class IngredientDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //for some reason, this returns the opposite bool that is expected. Therefore, use to find if something does not exist
+    public boolean ingredientNotExists(String name){
+        try{
+            Session session = HibernateUtil.getSession();
+            Query query=session.createQuery("FROM Ingredient WHERE name=:name", Ingredient.class);
+            query.setParameter("name", name);
+            List<Ingredient> ingredientList=query.list();
+            if (ingredientList.size() == 1) {
+                System.out.println("ingredient exists is new: "+name);
+                return true;
+            }else{
+                return false;}
+        }catch (HibernateException| IOException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }

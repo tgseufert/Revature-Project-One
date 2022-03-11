@@ -17,22 +17,17 @@ pageEncoding="UTF-8"%>
 </head>
 <body>
     <header>
-        <h1>${name}</h1>
+        <h1>404</h1>
     </header>
 
     <div class="center">
-        <ul>
-            <h3>Ingredients:</h3>
-            <li>${ing1}</li>
-            <li>${ing2}</li>
-            <li>${ing3}</li>
-        </ul>
-        </br>
-        <p>${instructions}</p>
+        <h2>Error: you tried any illegal action</h2>
+        <p>${status}</p>
+
+
     </div>
     <p>
     <a href="/Project_1">Return home</a>
     </p>
-
 </body>
 </html>

@@ -16,33 +16,27 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name="ingredients")
-public class Ingredient {
+public class Ingredient implements java.io.Serializable{
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @JoinColumn(name="ingredient_id")
+       private int id;
 
-    private int id;
-
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @Column(name = "quantity", nullable = false)
-    private String quantity;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ingredient", cascade=CascadeType.ALL)
+    Set<RecipeIngredient> recipeIngredients =new HashSet<RecipeIngredient>();
 
-
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "ingredients")
-    @JsonBackReference
-    private Set<Recipe> recipes;
-
-
-
-    public Ingredient(String name, String quantity) {
+    public Ingredient(String name) {
         this.name=name;
-        this.quantity=quantity;
+
     }
+
+
 
 
 

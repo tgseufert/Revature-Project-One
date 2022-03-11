@@ -19,7 +19,7 @@ public class RecipeDAO {
             Session session=HibernateUtil.getSession();
             if (getRecipeByID(r.getId())==null){
                 Transaction transaction=session.beginTransaction();
-                session.save(r);
+                session.persist(r);
                 transaction.commit();
                 System.out.println("added"+r.getName());
             }
@@ -51,7 +51,7 @@ public class RecipeDAO {
         recipe.setInstructions(instructions);
         session.update(recipe);
         transaction.commit();
-
+        System.out.println("updated"+name);
     }
 
     public Recipe getRecipeByName(String name){
@@ -95,32 +95,6 @@ public class RecipeDAO {
     }
 
 
-//
-//        public List<Recipe> list() throws SQLException {
-//            List<Recipe> recipeList = new ArrayList<>();
-//
-//            try (Connection connection=ConnectionUtil.getConnection()){
-//                String sql = "SELECT * FROM recipe ORDER BY name";
-//                Statement statement = connection.createStatement();
-//                ResultSet result = statement.executeQuery(sql);
-//
-//                while (result.next()) {
-//                    int id = result.getInt("id");
-//                    String name = result.getString("name");
-//                    String instructions =result.getString("instructions");
-//                    Recipe recipe = new Recipe(id, name,instructions);
-//
-//                    recipeList.add(recipe);
-//                }
-//
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//                throw ex;
-//            }
-//
-//            return recipeList;
-//        }
-//    }
 }
 
 

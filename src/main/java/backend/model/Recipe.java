@@ -16,11 +16,11 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name="recipe")
-public class Recipe {
+public class Recipe implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    @JoinColumn(name="recipe_id")
+    //@JoinColumn(name="recipe_id")
 
     private int id;
 
@@ -30,24 +30,18 @@ public class Recipe {
     @Column(name="instructions")
     private String instructions;
 
-    @ManyToMany(cascade={CascadeType.ALL})
-    @JoinTable(
-            name="recipe_ingredients",
-            joinColumns = {@JoinColumn(name = "recipe_id")},
-            inverseJoinColumns = {@JoinColumn(name="ingredient_id")}
-    )
-    @JsonBackReference
-    private Set<Ingredient> ingredients;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "recipe", cascade=CascadeType.ALL)
+    Set<RecipeIngredient> recipeIngredients =new HashSet<RecipeIngredient>();
 
 
+    public Recipe(String name, String instructions) {
+        this.name=name;
+        this.instructions=instructions;
 
-//    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "recipes")
-//    @JsonBackReference
-//    private Set<Ingredient> ingredients;
+    }
 
-//    @ManyToMany(mappedBy = "recipeSet")
-
-
-
+    public void addRecipeIngredient(RecipeIngredient recipeIngredient){
+        this.recipeIngredients.add(recipeIngredient);
+    }
 
 }

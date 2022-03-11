@@ -4,6 +4,7 @@ import backend.model.Recipe;
 import backend.model.Ingredient;
 
 
+import backend.model.RecipeIngredient;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -19,6 +20,7 @@ public class HibernateUtil {
     private static SessionFactory sessionFactory;
     private static Session session;
 
+
     public static Session getSession() throws IOException {
         if(sessionFactory==null){
             Configuration config = new Configuration();
@@ -29,6 +31,7 @@ public class HibernateUtil {
             config.setProperties(props);
             config.addAnnotatedClass(Recipe.class);
             config.addAnnotatedClass(Ingredient.class);
+            config.addAnnotatedClass(RecipeIngredient.class);
             ServiceRegistry serviceRegistry= new StandardServiceRegistryBuilder().applySettings(config.getProperties())
                     .build();
 
